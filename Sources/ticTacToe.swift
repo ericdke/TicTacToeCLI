@@ -1,4 +1,8 @@
-import Foundation
+#if os(Linux) 
+    import Glibc 
+#else 
+    import Foundation
+#endif
 
 public class TicTacToe {
 	private let winningSequences = [
@@ -47,14 +51,29 @@ public class TicTacToe {
 	}
 
 	var gridView: String {
-	    return slots.map { $0.description }.splitBy(3).map { String($0) }.joinWithSeparator("\n")
+	    let groups = slots.splitBy(3)
+	    let sub = groups.map { "\($0)" }
+	    return sub.joinWithSeparator("\n")
+	}
+
+	// TODO: find a way to generate a GOOD random number without killing the CPU
+	// This function is kind of slow + very *pseudo* random. Bleh.
+	func getPseudoRandomNumber(max:Int) -> Int {
+	    srandom(UInt32(time(nil)))
+	    return Int(random() % max)
 	}
 
 	private func randomIndex() -> Int {
 		var index: Int
-		repeat {
-			index = Int(arc4random_uniform(9))
-		} while played.contains(index)
+		#if os(Linux) 
+		    repeat {
+				index = getPseudoRandomNumber(9)
+			} while played.contains(index)
+		#else 
+		    repeat {
+		    	index = Int(arc4random_uniform(9))
+		    } while played.contains(index)
+		#endif
 		played.append(index)
 		return index
 	}
