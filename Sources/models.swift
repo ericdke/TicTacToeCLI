@@ -1,9 +1,9 @@
-enum Mark: String {
+public enum Mark: String {
     case X = "X"
     case O = "O"
 }
 
-struct Player {
+public struct Player {
     var symbol:Mark
     var name:String
     var slotsIndices:[Int] = []
@@ -13,11 +13,11 @@ struct Player {
     }
 }
 
-func == (lhs:Player?, rhs:Player) -> Bool {
+public func == (lhs:Player?, rhs:Player) -> Bool {
     return lhs?.symbol == rhs.symbol
 }
 
-struct Slot {
+public struct Slot {
     var index:Int
     var player:Player?
     init(index:Int) {

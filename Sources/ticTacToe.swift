@@ -1,7 +1,7 @@
 import Foundation
 
-class TicTacToe {
-	let winningSequences = [
+public class TicTacToe {
+	private let winningSequences = [
 	    // Horizontal rows
 	    [ 0, 1, 2 ],
 	    [ 3, 4, 5 ],
@@ -15,13 +15,13 @@ class TicTacToe {
 	    [ 2, 5, 8 ]
 	]
 
-	var player1:Player
-	var player2:Player
-	var players:[Player] = []
-	var slots:[Slot] = []
-	var played:[Int] = []
+	public var player1:Player
+	public var player2:Player
+	public var players:[Player] = []
+	public var slots:[Slot] = []
+	public var played:[Int] = []
 
-	init() {
+	public init() {
 		self.player1 = Player(symbol: Mark.X, name: "John")
 		self.player2 = Player(symbol: Mark.O, name: "Jane")
 		self.players = [player1, player2]
@@ -30,7 +30,7 @@ class TicTacToe {
 		}
 	}
 
-	init(player1:Player, player2:Player) {
+	public init(player1:Player, player2:Player) {
 		self.player1 = player1
 		self.player2 = player2
 		self.players = [player1, player2]
@@ -39,7 +39,7 @@ class TicTacToe {
 		}
 	}
 
-	func checkWin(player: Player, selectedIndexes:[Int]) -> Bool {
+	private func checkWin(player: Player, selectedIndexes:[Int]) -> Bool {
 	    if winningSequences.map({ Set<Int>($0) }).contains( Set<Int>(selectedIndexes) ) {
 	        return true
 	    }
@@ -50,7 +50,7 @@ class TicTacToe {
 	    return slots.map { $0.description }.splitBy(3).map { String($0) }.joinWithSeparator("\n")
 	}
 
-	func randomIndex() -> Int {
+	private func randomIndex() -> Int {
 		var index: Int
 		repeat {
 			index = Int(arc4random_uniform(9))
@@ -59,7 +59,7 @@ class TicTacToe {
 		return index
 	}
 
-	func checkPermutations(player current:Player) {
+	private func checkPermutations(player current:Player) {
 		if current.slotsIndices.count > 3 {
 			var perms:[[Int]] = []
 			current.slotsIndices.permutation(3).map { $0.sort() }.forEach { (a) -> () in
@@ -70,21 +70,25 @@ class TicTacToe {
 			}
 			for perm in perms {
 				if checkWin(current, selectedIndexes: perm) {
-					print("Winner is \(current.name)!")
+					sayWinner(current)
 					exit(0)
 				}	
 			}
 		}
 	}
 
-	func checkSlots(player current:Player) {
+	private func sayWinner(player:Player) {
+		print("\(player.name) is the winner!")
+	}
+
+	private func checkSlots(player current:Player) {
 		if checkWin(current, selectedIndexes: slots.filter { $0.player == current }.map { $0.index }) {
-			print("\(current.name) is the winner!")
+			sayWinner(current)
 			exit(0)
 		}
 	}
 
-	func play() {
+	public func play() {
 		var current = player1
 		for _ in 1...9 {
 			print("\(current.name) plays:\n")

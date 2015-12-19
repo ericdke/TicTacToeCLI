@@ -1,11 +1,11 @@
-extension Range {
-    var array: [Element] {
+public extension Range {
+    public var array: [Element] {
         return self.map { $0 }
     }   
 }
 
-extension Array {
-    func splitBy(subSize: Int) -> [[Element]] {
+public extension Array {
+    public func splitBy(subSize: Int) -> [[Element]] {
         return 0.stride(to: self.count, by: subSize).map { startIndex in
             let endIndex = startIndex.advancedBy(subSize, limit: self.count)
             return Array(self[startIndex ..< endIndex])
@@ -13,7 +13,7 @@ extension Array {
     }
 
     // adapted from ExSwift
-    func permutation(length: Int) -> [[Element]] {
+    public func permutation(length: Int) -> [[Element]] {
         if length < 0 || length > self.count {
             return []
         } else if length == 0 {
@@ -44,7 +44,7 @@ extension Array {
         return endArray
     }
     // adapted from ExSwift
-    func combination(length: Int) -> [[Element]] {
+    public func combination(length: Int) -> [[Element]] {
         if length < 0 || length > self.count {
             return []
         }
