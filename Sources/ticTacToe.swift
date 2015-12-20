@@ -32,6 +32,7 @@ public class TicTacToe {
 		for i in 0...8 {
 		    slots.append(Slot(index: i))
 		}
+		srandom(UInt32(time(nil)))
 	}
 
 	public init(player1:Player, player2:Player) {
@@ -41,6 +42,7 @@ public class TicTacToe {
 		for i in 0...8 {
 		    slots.append(Slot(index: i))
 		}
+		srandom(UInt32(time(nil)))
 	}
 
 	private func checkWin(player: Player, selectedIndexes:[Int]) -> Bool {
@@ -57,9 +59,8 @@ public class TicTacToe {
 	}
 
 	// TODO: find a way to generate a GOOD random number without killing the CPU
-	// This function is kind of slow + very *pseudo* random. Bleh.
+	// This function is very *pseudo* random. Bleh.
 	func getPseudoRandomNumber(max:Int) -> Int {
-	    srandom(UInt32(time(nil)))
 	    return Int(random() % max)
 	}
 
