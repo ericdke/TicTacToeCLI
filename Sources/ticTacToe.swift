@@ -23,7 +23,7 @@ public class TicTacToe {
 	public var player2:Player
 	public var players:[Player] = []
 	public var slots:[Slot] = []
-	public var played:[Int] = []
+	private var played:[Int] = []
 
 	public init() {
 		self.player1 = Player(symbol: Mark.X, name: "John")
@@ -52,7 +52,7 @@ public class TicTacToe {
 	    return false
 	}
 
-	var gridView: String {
+	public var gridView: String {
 	    let groups = slots.splitBy(3)
 	    let sub = groups.map { "\($0)" }
 	    return sub.joinWithSeparator("\n")
@@ -60,7 +60,7 @@ public class TicTacToe {
 
 	// TODO: find a way to generate a GOOD random number without killing the CPU
 	// This function is very *pseudo* random. Bleh.
-	func getPseudoRandomNumber(max:Int) -> Int {
+	private func getPseudoRandomNumber(max:Int) -> Int {
 	    return Int(random() % max)
 	}
 
@@ -108,37 +108,51 @@ public class TicTacToe {
 		}
 	}
 
-	public func play() {
-		print("\(player1.name) has \(player1.symbol)")
+	private func addIndex(current:Player, index:Int) {
+		if current == player1 {
+			player1.slotsIndices.append(index)
+		} else {
+			player2.slotsIndices.append(index)
+		}
+	}
+
+	private func swapPlayers(current:Player) -> Player {
+		if current == player1 {
+			return player2
+		} else {
+			return player1
+		}
+	}
+
+	private func announce() {
+		print("\n\(player1.name) has \(player1.symbol)")
 		print("\(player2.name) has \(player2.symbol)\n")
+	}
+
+	private func checkNoWinner() {
+		if played.count == 9 {
+			print("No winner. They're both too dumb.")
+			exit(0)
+		}
+	}
+
+	public func play() {
+		announce()
 		var current = player1
 		for _ in 1...9 {
 			print("\(current.name) plays:\n")
 
 			let idx = randomIndex()
 			slots[idx].player = current
-			if current == player1 {
-				player1.slotsIndices.append(idx)
-				current = player1
-			} else {
-				player2.slotsIndices.append(idx)
-				current = player2
-			}
+			addIndex(current, index: idx)
 
 			print("\(gridView)\n")
 
 			checkPermutations(player: current)
 			checkSlots(player: current)
+			checkNoWinner()
 			
-			if played.count == 9 {
-				print("No winner. They're both too dumb.")
-				exit(0)
-			}
-			if current == player1 {
-				current = player2
-			} else {
-				current = player1
-			}
+			current = swapPlayers(current)
 		}
 	}
 
