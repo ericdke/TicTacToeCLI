@@ -109,6 +109,8 @@ public class TicTacToe {
 	}
 
 	public func play() {
+		print("\(player1.name) has \(player1.symbol)")
+		print("\(player2.name) has \(player2.symbol)\n")
 		var current = player1
 		for _ in 1...9 {
 			print("\(current.name) plays:\n")
