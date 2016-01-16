@@ -1,7 +1,6 @@
+import Foundation
 #if os(Linux) 
     import Glibc 
-#else 
-    import Foundation
 #endif
 
 public class TicTacToe {
@@ -32,7 +31,9 @@ public class TicTacToe {
 		for i in 0...8 {
 		    slots.append(Slot(index: i))
 		}
-		srandom(UInt32(time(nil)))
+		#if os(Linux)
+			srandom(UInt32(time(nil)))
+		#endif
 	}
 
 	public init(player1:Player, player2:Player) {
@@ -42,15 +43,18 @@ public class TicTacToe {
 		for i in 0...8 {
 		    slots.append(Slot(index: i))
 		}
-		srandom(UInt32(time(nil)))
+		#if os(Linux)
+			srandom(UInt32(time(nil)))
+		#endif
 	}
 
-	private func checkWin(var player: Player, selectedIndexes:[Int]) -> Bool {
+	private func checkWin(player: Player, selectedIndexes:[Int]) -> Bool {
 		let wS = winningSequences.map({ Set<Int>($0) })
 		let sI = Set<Int>(selectedIndexes)
 		if sI.count > 3 {
-			player.slotsIndices = sI.map { Int($0) }
-			checkPermutations(player: player)
+			var pl = player
+			pl.slotsIndices = sI.map { Int($0) }
+			checkPermutations(player: pl)
 		}
 	    if wS.contains(sI) {
 	        return true
@@ -72,14 +76,14 @@ public class TicTacToe {
 
 	private func randomIndex() -> Int {
 		var index: Int
-		#if os(Linux) 
-		    repeat {
-				index = getPseudoRandomNumber(9)
-			} while played.contains(index)
-		#else 
-		    repeat {
+		#if os(OSX)
+			repeat {
 		    	index = Int(arc4random_uniform(9))
 		    } while played.contains(index)
+		#else
+			repeat {
+				index = getPseudoRandomNumber(9)
+			} while played.contains(index)
 		#endif
 		played.append(index)
 		return index

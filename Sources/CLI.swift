@@ -1,6 +1,5 @@
-#if os(OSX) 
-    import Foundation
-#else 
+import Foundation
+#if os(Linux) 
     import Glibc
 #endif
 
