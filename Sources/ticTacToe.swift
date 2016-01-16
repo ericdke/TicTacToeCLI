@@ -45,8 +45,14 @@ public class TicTacToe {
 		srandom(UInt32(time(nil)))
 	}
 
-	private func checkWin(player: Player, selectedIndexes:[Int]) -> Bool {
-	    if winningSequences.map({ Set<Int>($0) }).contains( Set<Int>(selectedIndexes) ) {
+	private func checkWin(var player: Player, selectedIndexes:[Int]) -> Bool {
+		let wS = winningSequences.map({ Set<Int>($0) })
+		let sI = Set<Int>(selectedIndexes)
+		if sI.count > 3 {
+			player.slotsIndices = sI.map { Int($0) }
+			checkPermutations(player: player)
+		}
+	    if wS.contains(sI) {
 	        return true
 	    }
 	    return false
