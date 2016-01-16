@@ -4,6 +4,24 @@ public extension Range {
     }   
 }
 
+public extension Int {
+    public func times(f: () -> ()) {
+        if self > 0 {
+            for _ in 0..<self {
+                f()
+            }
+        }
+    }
+    
+    public func times(@autoclosure f: () -> ()) {
+        if self > 0 {
+            for _ in 0..<self {
+                f()
+            }
+        }
+    }
+}
+
 public extension Array {
     public func splitBy(subSize: Int) -> [[Element]] {
         return 0.stride(to: self.count, by: subSize).map { startIndex in
