@@ -5,7 +5,7 @@ public class Grid {
 
 	public init() {
 		for i in 0...8 {
-		    slots.append(Slot(index: i))
+		    self.slots.append(Slot(index: i))
 		}
 		#if os(Linux)
 			srandom(UInt32(time(nil)))
@@ -13,14 +13,14 @@ public class Grid {
 	}
 
 	public var view: String {
-	    let groups = slots.splitBy(3)
+	    let groups = self.slots.splitBy(3)
 	    let sub = groups.map { "\($0)" }
 	    return sub.joinWithSeparator("\n")
 	}
 
 	public func updateIndex(index: Int, forPlayer currentPlayer: Player) {
-		played.append(index)
-		slots[index].player = currentPlayer
+		self.played.append(index)
+		self.slots[index].player = currentPlayer
 	}
 
 }

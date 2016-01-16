@@ -24,22 +24,22 @@ public class TicTacToe {
 	public let view:View
 
 	public init() {
-		playersManager = PlayersManager()
-		grid = Grid()
-		view = View(manager: playersManager)
+		self.playersManager = PlayersManager()
+		self.grid = Grid()
+		self.view = View(manager: self.playersManager)
 	}
 
 	public init(player1:Player, player2:Player) {
-		playersManager = PlayersManager(player1: player1, player2: player2)
-		grid = Grid()
-		view = View(manager: playersManager)
+		self.playersManager = PlayersManager(player1: player1, player2: player2)
+		self.grid = Grid()
+		self.view = View(manager: self.playersManager)
 	}
 
 	private func checkWin(player: Player, selectedIndexes:[Int]) -> Bool {
 		let wS = winningSequences.map({ Set<Int>($0) })
 		let sI = Set<Int>(selectedIndexes)
 		if sI.count > 3 {
-			var pl = player
+			var pl = player // player is a struct
 			pl.slotsIndices = sI.map { Int($0) }
 			checkPermutations(player: pl)
 		}
@@ -60,11 +60,11 @@ public class TicTacToe {
 		#if os(OSX)
 			repeat {
 		    	index = Int(arc4random_uniform(9))
-		    } while grid.played.contains(index)
+		    } while self.grid.played.contains(index)
 		#else
 			repeat {
 				index = getPseudoRandomNumber(9)
-			} while grid.played.contains(index)
+			} while self.grid.played.contains(index)
 		#endif
 		return index
 	}
@@ -80,7 +80,7 @@ public class TicTacToe {
 			}
 			for perm in perms {
 				if checkWin(currentPlayer, selectedIndexes: perm) {
-					view.sayWinner(currentPlayer)
+					self.view.sayWinner(currentPlayer)
 					exit(0)
 				}	
 			}
@@ -88,39 +88,39 @@ public class TicTacToe {
 	}
 
 	private func checkSlots(player currentPlayer:Player) {
-		let indices = grid.slots.filter { $0.player == currentPlayer }.map { $0.index }
+		let indices = self.grid.slots.filter { $0.player == currentPlayer }.map { $0.index }
 		if checkWin(currentPlayer, selectedIndexes: indices) {
-			view.sayWinner(currentPlayer)
+			self.view.sayWinner(currentPlayer)
 			exit(0)
 		}
 	}
 
 	private func addIndexToPlayer(currentPlayer:Player, index:Int) {
-		if currentPlayer == playersManager.player1 {
-			playersManager.player1.slotsIndices.append(index)
+		if currentPlayer == self.playersManager.player1 {
+			self.playersManager.player1.slotsIndices.append(index)
 		} else {
-			playersManager.player2.slotsIndices.append(index)
+			self.playersManager.player2.slotsIndices.append(index)
 		}
 	}
 
 	private func swapPlayers(currentPlayer:Player) -> Player {
-		if currentPlayer == playersManager.player1 {
-			return playersManager.player2
+		if currentPlayer == self.playersManager.player1 {
+			return self.playersManager.player2
 		} else {
-			return playersManager.player1
+			return self.playersManager.player1
 		}
 	}
 
 	private func checkNoWinner() {
-		if grid.played.count == 9 {
-			view.noWinner()
+		if self.grid.played.count == 9 {
+			self.view.noWinner()
 			exit(0)
 		}
 	}
 
 	public func play() {
-		view.announce()
-		var currentPlayer = playersManager.player1
+		self.view.announce()
+		var currentPlayer = self.playersManager.player1
 		9.times {
 			self.view.playerPlays(currentPlayer)
 
