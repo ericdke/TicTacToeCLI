@@ -21,15 +21,18 @@ public class TicTacToe {
 
 	public let playersManager: PlayersManager
 	public let grid: Grid
+	public let view:View
 
 	public init() {
 		playersManager = PlayersManager()
 		grid = Grid()
+		view = View(manager: playersManager)
 	}
 
 	public init(player1:Player, player2:Player) {
 		playersManager = PlayersManager(player1: player1, player2: player2)
 		grid = Grid()
+		view = View(manager: playersManager)
 	}
 
 	private func checkWin(player: Player, selectedIndexes:[Int]) -> Bool {
@@ -77,20 +80,17 @@ public class TicTacToe {
 			}
 			for perm in perms {
 				if checkWin(currentPlayer, selectedIndexes: perm) {
-					sayWinner(currentPlayer)
+					view.sayWinner(currentPlayer)
 					exit(0)
 				}	
 			}
 		}
 	}
 
-	private func sayWinner(player:Player) {
-		print("\(player.name) is the winner!")
-	}
-
 	private func checkSlots(player currentPlayer:Player) {
-		if checkWin(currentPlayer, selectedIndexes: grid.slots.filter { $0.player == currentPlayer }.map { $0.index }) {
-			sayWinner(currentPlayer)
+		let indices = grid.slots.filter { $0.player == currentPlayer }.map { $0.index }
+		if checkWin(currentPlayer, selectedIndexes: indices) {
+			view.sayWinner(currentPlayer)
 			exit(0)
 		}
 	}
@@ -111,29 +111,24 @@ public class TicTacToe {
 		}
 	}
 
-	private func announce() {
-		print("\n\(playersManager.player1.name) has \(playersManager.player1.symbol)")
-		print("\(playersManager.player2.name) has \(playersManager.player2.symbol)\n")
-	}
-
 	private func checkNoWinner() {
 		if grid.played.count == 9 {
-			print("No winner. They're both too dumb.")
+			view.noWinner()
 			exit(0)
 		}
 	}
 
 	public func play() {
-		announce()
+		view.announce()
 		var currentPlayer = playersManager.player1
 		9.times {
-			print("\(currentPlayer.name) plays:\n")
+			self.view.playerPlays(currentPlayer)
 
 			let idx = self.randomIndex()
 			self.grid.updateIndex(idx, forPlayer: currentPlayer)
 			self.addIndexToPlayer(currentPlayer, index: idx)
 
-			print("\(self.grid.view)\n")
+			self.view.printGrid(self.grid)
 
 			self.checkPermutations(player: currentPlayer)
 			self.checkSlots(player: currentPlayer)

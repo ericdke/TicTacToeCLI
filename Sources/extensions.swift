@@ -47,12 +47,12 @@ public extension Array {
             return permutations
         }
     }
-    // adapted from ExSwift
+    // adapted from ExSwift, updated for Swift 2.1
     private func permutationHelper(n: Int, inout array: [Element], inout endArray: [[Element]]) -> [[Element]] {
         if n == 1 {
             endArray += [array]
         }
-        for var i = 0; i < n; i++ {
+        for i in 0..<n {
             permutationHelper(n - 1, array: &array, endArray: &endArray)
             let j = n % 2 == 0 ? i : 0;
             let temp: Element = array[j]

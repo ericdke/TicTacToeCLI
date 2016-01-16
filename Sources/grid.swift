@@ -18,7 +18,7 @@ public class Grid {
 	    return sub.joinWithSeparator("\n")
 	}
 
-	func updateIndex(index: Int, forPlayer currentPlayer: Player) {
+	public func updateIndex(index: Int, forPlayer currentPlayer: Player) {
 		played.append(index)
 		slots[index].player = currentPlayer
 	}
