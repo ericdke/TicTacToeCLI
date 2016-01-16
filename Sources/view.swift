@@ -16,7 +16,7 @@ public class View {
 	}
 
 	public func printGrid(grid: Grid) {
-		print("\(grid.view)\n")
+		print("\(grid)\n")
 	}
 
 	public func noWinner() {

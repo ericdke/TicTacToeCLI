@@ -1,4 +1,4 @@
-public class Grid {
+public class Grid: CustomStringConvertible {
 	
 	public var slots:[Slot]
 	public var played:[Int] = []
@@ -10,7 +10,7 @@ public class Grid {
 		#endif
 	}
 
-	public var view: String {
+	public var description: String {
 	    let groups = self.slots.splitBy(3)
 	    let sub = groups.map { "\($0)" }
 	    return sub.joinWithSeparator("\n")
