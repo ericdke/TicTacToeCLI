@@ -1,12 +1,10 @@
 public class Grid {
 	
-	public var slots:[Slot] = []
+	public var slots:[Slot]
 	public var played:[Int] = []
 
 	public init() {
-		for i in 0...8 {
-		    self.slots.append(Slot(index: i))
-		}
+		self.slots = Array(0...8).map { Slot(index: $0) }
 		#if os(Linux)
 			srandom(UInt32(time(nil)))
 		#endif
