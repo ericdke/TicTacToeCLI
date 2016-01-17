@@ -1,5 +1,9 @@
+#if os(Linux)
+	import Glibc
+#endif
+
 public class Grid: CustomStringConvertible {
-	
+
 	public var slots:[Slot]
 	public var played:[Int] = []
 
