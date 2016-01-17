@@ -1,3 +1,7 @@
+#if os(Linux)
+	import Glibc
+#endif
+
 public class Grid {
 	
 	public var slots:[Slot]

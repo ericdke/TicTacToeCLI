@@ -77,12 +77,12 @@ public extension Array {
             combinations.append(combination)
             var i = indexes.count - 1
             while i >= 0 && indexes[i] == i + offset {
-                i--
+                i -= 1
             }
             if i < 0 {
                 break
             }
-            i++
+            i += 1
             let start = indexes[i-1] + 1
             for j in (i-1)..<indexes.count {
                 indexes[j] = start + j - i + 1
