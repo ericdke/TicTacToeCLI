@@ -21,7 +21,7 @@ public class TicTacToe {
 
 	public let playersManager: PlayersManager
 	public let grid: Grid
-	public let view:View
+	public let view: View
 
 	public init() {
 		self.playersManager = PlayersManager()
@@ -51,7 +51,7 @@ public class TicTacToe {
 
 	// TODO: find a way to generate a GOOD random number without killing the CPU
 	// This function is very *pseudo* random. Bleh.
-	private func getPseudoRandomNumber(max:Int) -> Int {
+	private func getPseudoRandomNumber(max: Int) -> Int {
 	    return Int(random() % max)
 	}
 
@@ -63,24 +63,24 @@ public class TicTacToe {
 		    } while self.grid.played.contains(index)
 		#else
 			repeat {
-				index = getPseudoRandomNumber(9)
+				index = getPseudoRandomNumber(max: 9)
 			} while self.grid.played.contains(index)
 		#endif
 		return index
 	}
 
-	private func checkPermutations(player currentPlayer:Player) {
+	private func checkPermutations(player currentPlayer: Player) {
 		if currentPlayer.slotsIndices.count > 3 {
-			var perms:[[Int]] = []
-			currentPlayer.slotsIndices.permutation(3).map { $0.sort() }.forEach { (a) -> () in
-			    let contains = perms.contains{ $0 == a }
+			var perms: [[Int]] = []
+			currentPlayer.slotsIndices.permutation(length: 3).map { $0.sorted() }.forEach { (a) -> () in
+			    let contains = perms.contains { $0 == a }
 			    if !contains {
 			        perms.append(a)
 			    }
 			}
 			for perm in perms {
-				if checkWin(currentPlayer, selectedIndexes: perm) {
-					self.view.sayWinner(currentPlayer)
+				if checkWin(player: currentPlayer, selectedIndexes: perm) {
+					self.view.sayWinner(player: currentPlayer)
 					exit(0)
 				}	
 			}
@@ -89,13 +89,13 @@ public class TicTacToe {
 
 	private func checkSlots(player currentPlayer:Player) {
 		let indices = self.grid.slots.filter { $0.player == currentPlayer }.map { $0.index }
-		if checkWin(currentPlayer, selectedIndexes: indices) {
-			self.view.sayWinner(currentPlayer)
+		if checkWin(player: currentPlayer, selectedIndexes: indices) {
+			self.view.sayWinner(player: currentPlayer)
 			exit(0)
 		}
 	}
 
-	private func addIndexToPlayer(currentPlayer:Player, index:Int) {
+	private func addIndexToPlayer(currentPlayer: Player, index:Int) {
 		if currentPlayer == self.playersManager.player1 {
 			self.playersManager.player1.slotsIndices.append(index)
 		} else {
@@ -103,7 +103,7 @@ public class TicTacToe {
 		}
 	}
 
-	private func swapPlayers(currentPlayer:Player) -> Player {
+	private func swapPlayers(currentPlayer: Player) -> Player {
 		if currentPlayer == self.playersManager.player1 {
 			return self.playersManager.player2
 		} else {
@@ -122,19 +122,19 @@ public class TicTacToe {
 		self.view.announce()
 		var currentPlayer = self.playersManager.player1
 		9.times {
-			self.view.playerPlays(currentPlayer)
+			self.view.playerPlays(player: currentPlayer)
 
 			let idx = self.randomIndex()
-			self.grid.updateIndex(idx, forPlayer: currentPlayer)
-			self.addIndexToPlayer(currentPlayer, index: idx)
+			self.grid.updateIndex(index: idx, forPlayer: currentPlayer)
+			self.addIndexToPlayer(currentPlayer: currentPlayer, index: idx)
 
-			self.view.printGrid(self.grid)
+			self.view.printGrid(grid: self.grid)
 
 			self.checkPermutations(player: currentPlayer)
 			self.checkSlots(player: currentPlayer)
 			self.checkNoWinner()
 			
-			currentPlayer = self.swapPlayers(currentPlayer)
+			currentPlayer = self.swapPlayers(currentPlayer: currentPlayer)
 		}
 	}
 

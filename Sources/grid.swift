@@ -4,8 +4,8 @@
 
 public class Grid: CustomStringConvertible {
 
-	public var slots:[Slot]
-	public var played:[Int] = []
+	public var slots: [Slot]
+	public var played: [Int] = []
 
 	public init() {
 		self.slots = Array(0...8).map { Slot(index: $0) }
@@ -15,9 +15,9 @@ public class Grid: CustomStringConvertible {
 	}
 
 	public var description: String {
-	    let groups = self.slots.splitBy(3)
+	    let groups = self.slots.splitBy(subSize: 3)
 	    let sub = groups.map { "\($0)" }
-	    return sub.joinWithSeparator("\n")
+	    return sub.joined(separator: "\n")
 	}
 
 	public func updateIndex(index: Int, forPlayer currentPlayer: Player) {

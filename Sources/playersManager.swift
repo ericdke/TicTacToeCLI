@@ -1,8 +1,8 @@
 public class PlayersManager {
 
-	public var player1:Player
-	public var player2:Player
-	public var players:[Player] = []
+	public var player1: Player
+	public var player2: Player
+	public var players: [Player] = []
 
 	public init() {
 		self.player1 = Player(symbol: Mark.X, name: "John")

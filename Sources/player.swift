@@ -1,10 +1,10 @@
 public struct Player {
 
-    public var symbol:Mark
+    public var symbol: Mark
 
-    public var name:String
+    public var name: String
 
-    public var slotsIndices:[Int] = []
+    public var slotsIndices: [Int] = []
 
     public init(symbol: Mark, name: String) {
         self.symbol = symbol
