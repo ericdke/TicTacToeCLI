@@ -1,96 +1,135 @@
-public extension CountableRange {
-    public var array: [Element] {
-        return self.map { $0 }
-    }   
-}
+import Foundation
+#if os(Linux) 
+    import Glibc 
+#endif
 
-public extension Int {
-    public func times(f: () -> ()) {
-        if self > 0 {
-            for _ in 0..<self {
-                f()
-            }
-        }
-    }
-    
-    public func times(f: @autoclosure () -> ()) {
-        if self > 0 {
-            for _ in 0..<self {
-                f()
-            }
-        }
-    }
-}
+public class TicTacToe {
 
-public extension Array {
-    public func splitBy(subSize: Int) -> [[Element]] {
-        return stride(from: 0, to: self.count, by: subSize).map { startIndex in
-            var endIndex = startIndex + subSize
-            if endIndex > self.count {
-                endIndex = self.count
-            }
-            return Array(self[startIndex ..< endIndex])
-        }
-    }
+	private let winningSequences = [
+	    // Horizontal rows
+	    [ 0, 1, 2 ],
+	    [ 3, 4, 5 ],
+	    [ 6, 7, 8 ],
+	    // Diagonals
+	    [ 0, 4, 8 ],
+	    [ 2, 4, 6 ],
+	    // Vertical rows
+	    [ 0, 3, 6 ],
+	    [ 1, 4, 7 ],
+	    [ 2, 5, 8 ]
+	]
 
-    // adapted from ExSwift
-    public func permutation(length: Int) -> [[Element]] {
-        if length < 0 || length > self.count {
-            return []
-        } else if length == 0 {
-            return [[]]
-        } else {
-            var permutations: [[Element]] = []
-            let combinations = combination(length: length)
-            for combination in combinations {
-                var endArray: [[Element]] = []
-                var mutableCombination = combination
-                permutations += self.permutationHelper(n: length, array: &mutableCombination, endArray: &endArray)
-            }
-            return permutations
-        }
-    }
-    // adapted from ExSwift, updated for Swift 2.1
-    private func permutationHelper(n: Int, array: inout [Element], endArray: inout [[Element]]) -> [[Element]] {
-        if n == 1 {
-            endArray += [array]
-        }
-        for i in 0..<n {
-            permutationHelper(n: n - 1, array: &array, endArray: &endArray)
-            let j = n % 2 == 0 ? i : 0;
-            let temp: Element = array[j]
-            array[j] = array[n - 1]
-            array[n - 1] = temp
-        }
-        return endArray
-    }
-    // adapted from ExSwift
-    public func combination(length: Int) -> [[Element]] {
-        if length < 0 || length > self.count {
-            return []
-        }
-        var indexes: [Int] = (0..<length).array
-        var combinations: [[Element]] = []
-        let offset = self.count - indexes.count
-        while true {
-            var combination: [Element] = []
-            for index in indexes {
-                combination.append(self[index])
-            }
-            combinations.append(combination)
-            var i = indexes.count - 1
-            while i >= 0 && indexes[i] == i + offset {
-                i -= 1
-            }
-            if i < 0 {
-                break
-            }
-            i += 1
-            let start = indexes[i-1] + 1
-            for j in (i-1)..<indexes.count {
-                indexes[j] = start + j - i + 1
-            }
-        }
-        return combinations
-    }
+	public let playersManager: PlayersManager
+	public let grid: Grid
+	public let view: View
+
+	public init() {
+		self.playersManager = PlayersManager()
+		self.grid = Grid()
+		self.view = View(manager: self.playersManager)
+	}
+
+	public init(player1:Player, player2:Player) {
+		self.playersManager = PlayersManager(player1: player1, player2: player2)
+		self.grid = Grid()
+		self.view = View(manager: self.playersManager)
+	}
+
+	private func checkWin(player: Player, selectedIndexes:[Int]) -> Bool {
+		let wS = winningSequences.map({ Set<Int>($0) })
+		let sI = Set<Int>(selectedIndexes)
+		if sI.count > 3 {
+			var pl = player // player is a struct
+			pl.slotsIndices = sI.map { Int($0) }
+			checkPermutations(player: pl)
+		}
+	    if wS.contains(sI) {
+	        return true
+	    }
+	    return false
+	}
+
+	private func randomIndex() -> Int {
+		var index: Int
+		#if os(OSX)
+			repeat {
+		    	index = Int(arc4random_uniform(9))
+		    } while self.grid.played.contains(index)
+		#else
+			repeat {
+				index = Int(random() % 9)
+			} while self.grid.played.contains(index)
+		#endif
+		return index
+	}
+
+	private func checkPermutations(player currentPlayer: Player) {
+		if currentPlayer.slotsIndices.count > 3 {
+			var perms: [[Int]] = []
+			currentPlayer.slotsIndices.permutation(length: 3).map { $0.sorted() }.forEach { (a) -> () in
+			    let contains = perms.contains { $0 == a }
+			    if !contains {
+			        perms.append(a)
+			    }
+			}
+			for perm in perms {
+				if checkWin(player: currentPlayer, selectedIndexes: perm) {
+					self.view.sayWinner(player: currentPlayer)
+					exit(0)
+				}	
+			}
+		}
+	}
+
+	private func checkSlots(player currentPlayer:Player) {
+		let indices = self.grid.slots.filter { $0.player == currentPlayer }.map { $0.index }
+		if checkWin(player: currentPlayer, selectedIndexes: indices) {
+			self.view.sayWinner(player: currentPlayer)
+			exit(0)
+		}
+	}
+
+	private func addIndexToPlayer(currentPlayer: Player, index:Int) {
+		if currentPlayer == self.playersManager.player1 {
+			self.playersManager.player1.slotsIndices.append(index)
+		} else {
+			self.playersManager.player2.slotsIndices.append(index)
+		}
+	}
+
+	private func swapPlayers(currentPlayer: Player) -> Player {
+		if currentPlayer == self.playersManager.player1 {
+			return self.playersManager.player2
+		} else {
+			return self.playersManager.player1
+		}
+	}
+
+	private func checkNoWinner() {
+		if self.grid.played.count == 9 {
+			self.view.noWinner()
+			exit(0)
+		}
+	}
+
+	public func play() {
+		self.view.announce()
+		var currentPlayer = self.playersManager.player1
+		9.times {
+			self.view.playerPlays(player: currentPlayer)
+
+			let idx = self.randomIndex()
+			self.grid.updateIndex(index: idx, forPlayer: currentPlayer)
+			self.addIndexToPlayer(currentPlayer: currentPlayer, index: idx)
+
+			self.view.printGrid(grid: self.grid)
+
+			self.checkPermutations(player: currentPlayer)
+			self.checkSlots(player: currentPlayer)
+			self.checkNoWinner()
+			
+			currentPlayer = self.swapPlayers(currentPlayer: currentPlayer)
+		}
+	}
+
 }
