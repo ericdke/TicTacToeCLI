@@ -2,7 +2,5 @@
 
 ## Tic Tac Toe
 
-A minimal Tic Tac Toe CLI in Swift.
-
-*WIP*
+A minimal Tic Tac Toe CLI in Swift. No interactivity.
 

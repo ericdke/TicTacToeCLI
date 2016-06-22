@@ -19,9 +19,9 @@ public class TicTacToe {
 	    [ 2, 5, 8 ]
 	]
 
-	public let playersManager: PlayersManager
-	public let grid: Grid
-	public let view: View
+	public var playersManager: PlayersManager
+	public var grid: Grid
+	public var view: View
 
 	public init() {
 		self.playersManager = PlayersManager()
@@ -49,12 +49,6 @@ public class TicTacToe {
 	    return false
 	}
 
-	// TODO: find a way to generate a GOOD random number without killing the CPU
-	// This function is very *pseudo* random. Bleh.
-	private func getPseudoRandomNumber(max: Int) -> Int {
-	    return Int(random() % max)
-	}
-
 	private func randomIndex() -> Int {
 		var index: Int
 		#if os(OSX)
@@ -63,7 +57,7 @@ public class TicTacToe {
 		    } while self.grid.played.contains(index)
 		#else
 			repeat {
-				index = getPseudoRandomNumber(max: 9)
+				index = Int(random() % 9)
 			} while self.grid.played.contains(index)
 		#endif
 		return index
