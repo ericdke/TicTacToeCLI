@@ -9,9 +9,6 @@ public class Grid: CustomStringConvertible {
 
 	public init() {
 		self.slots = Array(0...8).map { Slot(index: $0) }
-		#if os(Linux)
-			srandom(UInt32(time(nil)))
-		#endif
 	}
 
 	public var description: String {

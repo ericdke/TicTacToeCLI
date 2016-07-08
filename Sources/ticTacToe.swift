@@ -27,6 +27,9 @@ public class TicTacToe {
 		self.playersManager = PlayersManager()
 		self.grid = Grid()
 		self.view = View(manager: self.playersManager)
+		#if os(Linux)
+			srandom(UInt32(time(nil)))
+		#endif
 	}
 
 	public init(player1:Player, player2:Player) {
