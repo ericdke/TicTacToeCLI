@@ -56,7 +56,7 @@ public extension Array {
             endArray += [array]
         }
         for i in 0..<n {
-            permutationHelper(n: n - 1, array: &array, endArray: &endArray)
+            _ = permutationHelper(n: n - 1, array: &array, endArray: &endArray)
             let j = n % 2 == 0 ? i : 0;
             let temp: Element = array[j]
             array[j] = array[n - 1]
