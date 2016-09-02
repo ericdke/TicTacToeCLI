@@ -1,5 +1,7 @@
 #if os(Linux)
 	import Glibc
+#else
+    import Darwin.libc
 #endif
 
 public class Grid: CustomStringConvertible {
@@ -8,7 +10,11 @@ public class Grid: CustomStringConvertible {
 	public var played: [Int] = []
 
 	public init() {
-		self.slots = Array(0...8).map { Slot(index: $0) }
+        if getenv("TERM") == nil { // in Xcode or dumb terminal
+            self.slots = Array(0...8).map { Slot(index: $0, is_term: false) }
+        } else {
+            self.slots = Array(0...8).map { Slot(index: $0) }
+        }
 	}
 
 	public var description: String {

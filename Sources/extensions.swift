@@ -1,7 +1,25 @@
+
 public extension CountableRange {
     public var array: [Element] {
         return self.map { $0 }
     }   
+}
+
+public enum Colors {
+    case blue, green, magenta
+}
+
+public extension String {
+    public func colorized(color: Colors) -> String {
+        switch color {
+        case .blue:
+            return "\u{001B}[0;34m\(self)\u{001B}[0;39m"
+        case .green:
+            return "\u{001B}[0;32m\(self)\u{001B}[0;39m"
+        default:
+            return "\u{001B}[0;35m-\u{001B}[0;39m"
+        }
+    }
 }
 
 public extension Array {
