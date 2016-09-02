@@ -12,6 +12,6 @@ public struct Slot: CustomStringConvertible {
         if let sym = self.player?.symbol {
             return "\(sym)"
         }
-        return " "
+        return "-"
     }
 }
