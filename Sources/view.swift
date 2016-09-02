@@ -1,14 +1,8 @@
 public class View {
-
-	public let playersManager: PlayersManager
-
-	public init(manager: PlayersManager) {
-		playersManager = manager
-	}
 	
-	public func announce() {
-		print("\n\(playersManager.player1.name) has \(playersManager.player1.symbol)")
-		print("\(playersManager.player2.name) has \(playersManager.player2.symbol)\n")
+    public func announce(p1: Player, p2: Player) {
+		print("\n\(p1.name) has \(p1.symbol)")
+		print("\(p2.name) has \(p2.symbol)\n")
 	}
 
 	public func playerPlays(player: Player) {
