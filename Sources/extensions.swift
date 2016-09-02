@@ -1,10 +1,4 @@
 
-public extension CountableRange {
-    public var array: [Element] {
-        return self.map { $0 }
-    }   
-}
-
 public enum Colors {
     case blue, green, magenta
 }
@@ -38,7 +32,7 @@ public extension Array {
         if length < 0 || length > self.count {
             return []
         }
-        var indexes: [Int] = (0..<length).array
+        var indexes: [Int] = (0..<length).map { $0 }
         var combinations: [[Element]] = []
         let offset = self.count - indexes.count
         while true {
