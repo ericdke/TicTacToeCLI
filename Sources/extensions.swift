@@ -4,7 +4,7 @@ public enum Colors {
 }
 
 public extension String {
-    public func colorized(color: Colors) -> String {
+    func colorized(color: Colors) -> String {
         switch color {
         case .blue:
             return "\u{001B}[0;34m\(self)\u{001B}[0;39m"
@@ -17,7 +17,7 @@ public extension String {
 }
 
 public extension Array {
-    public func splitBy(subSize: Int) -> [[Element]] {
+    func splitBy(subSize: Int) -> [[Element]] {
         return stride(from: 0, to: self.count, by: subSize).map { startIndex in
             var endIndex = startIndex + subSize
             if endIndex > self.count {
@@ -28,7 +28,7 @@ public extension Array {
     }
 
     // adapted from ExSwift
-    public func combination(length: Int) -> [[Element]] {
+    func combination(length: Int) -> [[Element]] {
         if length < 0 || length > self.count {
             return []
         }
